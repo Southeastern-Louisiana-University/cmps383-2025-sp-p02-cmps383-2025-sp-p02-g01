@@ -39,8 +39,22 @@ namespace Selu383.SP25.P02.Api
 
 
             app.MapControllers();
+            app.UseStaticFiles();
+
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSpa(x =>
+                {
+                    x.UseProxyToSpaDevelopmentServer("http://localhost:5173");
+                });
+            }
+            else
+            {
+                app.MapFallbackToFile("/index.html");
+            }
 
             app.Run();
+
         }
     }
 }
