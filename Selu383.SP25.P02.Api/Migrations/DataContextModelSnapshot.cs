@@ -43,7 +43,7 @@ namespace Selu383.SP25.P02.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Theaters");
+                    b.ToTable("Theaters", (string)null);
                 });
 #pragma warning restore 612, 618
         }
