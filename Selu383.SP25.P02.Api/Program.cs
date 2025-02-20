@@ -1,4 +1,5 @@
 
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Selu383.SP25.P02.Api.Data;
@@ -40,6 +41,8 @@ namespace Selu383.SP25.P02.Api
                 options.User.RequireUniqueEmail = false;
             });
 
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie();
             builder.Services.ConfigureApplicationCookie(options =>
             {
                 // Cookie 
