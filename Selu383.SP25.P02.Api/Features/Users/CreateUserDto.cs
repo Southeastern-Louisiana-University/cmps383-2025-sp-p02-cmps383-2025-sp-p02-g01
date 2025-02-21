@@ -2,7 +2,8 @@
 {
     public class CreateUserDto
     {
-        public string Username { get; set; }
-        public List<int> RoleIds { get; set; } = new List<int>();
+        public string UserName { get; set; }
+        public string Password { get; set; }
+        public string[] Roles { get; set; }
     }
 }

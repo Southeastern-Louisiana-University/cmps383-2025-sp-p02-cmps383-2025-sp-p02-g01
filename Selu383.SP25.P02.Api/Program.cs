@@ -85,21 +85,18 @@ namespace Selu383.SP25.P02.Api
             {
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Theater API v1"));
-                app.MapOpenApi();
             }
 
-
             app.UseHttpsRedirection();
+            app.UseStaticFiles();  // Moved before auth middleware
+
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
-            app.UseStaticFiles();
+
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Theater API v1"));
-
                 // Only proxy non-API requests to the SPA dev server
                 app.MapWhen(
                     context => !context.Request.Path.StartsWithSegments("/api"),
@@ -113,6 +110,7 @@ namespace Selu383.SP25.P02.Api
             {
                 app.MapFallbackToFile("/index.html");
             }
+
             app.Run();
         }
     }
