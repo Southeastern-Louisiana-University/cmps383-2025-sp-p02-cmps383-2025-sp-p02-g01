@@ -1,18 +1,10 @@
-﻿using Selu383.SP25.P02.Api.Features.UserRoles;
+﻿using Microsoft.AspNetCore.Identity;
+using Selu383.SP25.P02.Api.Features.UserRoles;
 
 namespace Selu383.SP25.P02.Api.Features.Users
 {
-    public class User
+    public class User : IdentityUser<int>
     {
-        public int Id { get; set; }
-        public string Username { get; set; }
-
-        // Navigation property for many-to-many relationship with Role
-        public virtual ICollection<UserRole> UserRoles { get; set; }
-
-        public User()
-        {
-            UserRoles = new HashSet<UserRole>();
-        }
+        public virtual ICollection<UserRole> Roles { get; set; } = new List<UserRole>();
     }
 }
