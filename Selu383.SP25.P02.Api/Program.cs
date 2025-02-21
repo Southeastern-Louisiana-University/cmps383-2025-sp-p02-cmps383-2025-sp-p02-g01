@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using Selu383.SP25.P02.Api.Data;
-// New Identity-related using statements
 using Selu383.SP25.P02.Api.Features.Users;
 using Selu383.SP25.P02.Api.Features.Theaters.Roles;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Selu383.SP25.P02.Api
 {
@@ -23,6 +24,16 @@ namespace Selu383.SP25.P02.Api
                 .AddDefaultTokenProviders();
 
             builder.Services.AddControllers();
+
+            // Add Swagger configuration
+            if (builder.Environment.IsDevelopment())
+            {
+                builder.Services.AddSwaggerGen(c =>
+                {
+                    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Theater API", Version = "v1" });
+                });
+            }
+
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.Configure<IdentityOptions>(options =>
             {
@@ -72,8 +83,11 @@ namespace Selu383.SP25.P02.Api
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Theater API v1"));
                 app.MapOpenApi();
             }
+
 
             app.UseHttpsRedirection();
             app.UseAuthentication();
@@ -83,10 +97,17 @@ namespace Selu383.SP25.P02.Api
             app.UseStaticFiles();
             if (app.Environment.IsDevelopment())
             {
-                app.UseSpa(x =>
-                {
-                    x.UseProxyToSpaDevelopmentServer("http://localhost:5173");
-                });
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Theater API v1"));
+
+                // Only proxy non-API requests to the SPA dev server
+                app.MapWhen(
+                    context => !context.Request.Path.StartsWithSegments("/api"),
+                    builder => builder.UseSpa(spa =>
+                    {
+                        spa.UseProxyToSpaDevelopmentServer("http://localhost:5173");
+                    })
+                );
             }
             else
             {
