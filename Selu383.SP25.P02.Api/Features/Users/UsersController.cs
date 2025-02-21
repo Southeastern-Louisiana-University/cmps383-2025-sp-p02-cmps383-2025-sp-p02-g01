@@ -8,7 +8,7 @@ namespace Selu383.SP25.P02.Api.Features.Users
 {
     [Route("api/users")]
     [ApiController]
-    [Authorize(Roles = "Admin")]  // Only admins can access this controller
+    [Authorize(Roles = "Admin")]  // Admin Controller
     public class UsersController : ControllerBase
     {
         private readonly UserManager<User> userManager;

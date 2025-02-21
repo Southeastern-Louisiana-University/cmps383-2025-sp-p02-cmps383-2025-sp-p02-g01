@@ -18,7 +18,7 @@ namespace Selu383.SP25.P02.Api
             builder.Services.AddDbContext<DataContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DataContext") ?? throw new InvalidOperationException("Connection string 'DataContext' not found.")));
 
-            //  Adds Identity configuration before other services
+            //  Adds Identity configuration 
             builder.Services.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<DataContext>()
                 .AddDefaultTokenProviders();
@@ -88,7 +88,7 @@ namespace Selu383.SP25.P02.Api
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();  // Moved before auth middleware
+            app.UseStaticFiles(); 
 
             app.UseAuthentication();
             app.UseAuthorization();
