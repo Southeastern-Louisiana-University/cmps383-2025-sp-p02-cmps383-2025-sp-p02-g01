@@ -57,11 +57,10 @@ namespace Selu383.SP25.P02.Api.Controllers
             }
 
             var isAdmin = await userManager.IsInRoleAsync(user, "Admin");
-
-            // Only admins can set ManagerId
-            if (dto.ManagerId.HasValue && !isAdmin)
+            // Only admins can create theaters
+            if (!isAdmin)
             {
-                return Forbid();
+                return Forbid();  // This will return 403 Forbidden
             }
 
             var theater = new Theater
@@ -105,7 +104,7 @@ namespace Selu383.SP25.P02.Api.Controllers
             var isAdmin = await userManager.IsInRoleAsync(user, "Admin");
             var isManager = theater.ManagerId == user.Id;
 
-             // Only admins can delete theaters
+            // Only admins can update theaters if they're not the manager
             if (!isAdmin && !isManager)
             {
                 return Forbid();
