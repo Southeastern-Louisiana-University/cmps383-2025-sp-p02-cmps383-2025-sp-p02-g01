@@ -63,6 +63,18 @@ namespace Selu383.SP25.P02.Api
                 options.LoginPath = "/Identity/Account/Login";
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 options.SlidingExpiration = true;
+
+                options.Events.OnRedirectToLogin = context =>
+                {
+                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    return Task.CompletedTask;
+                };
+
+                options.Events.OnRedirectToAccessDenied = context =>
+                {
+                    context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                    return Task.CompletedTask;
+                };
             });
             builder.Services.AddOpenApi();
             var app = builder.Build();
@@ -88,7 +100,7 @@ namespace Selu383.SP25.P02.Api
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles(); 
+            app.UseStaticFiles();
 
             app.UseAuthentication();
             app.UseAuthorization();

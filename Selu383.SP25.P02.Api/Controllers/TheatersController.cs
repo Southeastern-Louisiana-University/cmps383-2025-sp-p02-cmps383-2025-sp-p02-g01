@@ -51,6 +51,11 @@ namespace Selu383.SP25.P02.Api.Controllers
             }
 
             var user = await userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
             var isAdmin = await userManager.IsInRoleAsync(user, "Admin");
 
             // Only admins can set ManagerId
@@ -68,7 +73,7 @@ namespace Selu383.SP25.P02.Api.Controllers
             };
 
             theaters.Add(theater);
-            dataContext.SaveChanges();
+            await dataContext.SaveChangesAsync();
             dto.Id = theater.Id;
 
             return CreatedAtAction(nameof(GetTheaterById), new { id = dto.Id }, dto);
@@ -84,17 +89,24 @@ namespace Selu383.SP25.P02.Api.Controllers
                 return BadRequest();
             }
 
-            var theater = theaters.FirstOrDefault(x => x.Id == id);
+            var user = await userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var theater = await theaters.FirstOrDefaultAsync(x => x.Id == id);
             if (theater == null)
             {
                 return NotFound();
             }
 
-            var user = await userManager.GetUserAsync(User);
-            var isAdmin = await userManager.IsInRoleAsync(user, "Admin");
-
             // Check if user is admin or the theater manager
-            if (!isAdmin && theater.ManagerId != user.Id)
+            var isAdmin = await userManager.IsInRoleAsync(user, "Admin");
+            var isManager = theater.ManagerId == user.Id;
+
+             // Only admins can delete theaters
+            if (!isAdmin && !isManager)
             {
                 return Forbid();
             }
@@ -110,9 +122,16 @@ namespace Selu383.SP25.P02.Api.Controllers
             theater.SeatCount = dto.SeatCount;
             theater.ManagerId = dto.ManagerId;
 
-            dataContext.SaveChanges();
-            dto.Id = theater.Id;
+            try
+            {
+                await dataContext.SaveChangesAsync();
+            }
+            catch
+            {
+                return StatusCode(500, "An error occurred while updating the theater.");
+            }
 
+            dto.Id = theater.Id;
             return Ok(dto);
         }
 
@@ -121,13 +140,18 @@ namespace Selu383.SP25.P02.Api.Controllers
         [Authorize]
         public async Task<ActionResult> DeleteTheater(int id)
         {
-            var theater = theaters.FirstOrDefault(x => x.Id == id);
+            var user = await userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var theater = await theaters.FirstOrDefaultAsync(x => x.Id == id);
             if (theater == null)
             {
                 return NotFound();
             }
 
-            var user = await userManager.GetUserAsync(User);
             var isAdmin = await userManager.IsInRoleAsync(user, "Admin");
 
             // Only admins can delete theaters
@@ -137,7 +161,7 @@ namespace Selu383.SP25.P02.Api.Controllers
             }
 
             theaters.Remove(theater);
-            dataContext.SaveChanges();
+            await dataContext.SaveChangesAsync();
             return Ok();
         }
 
