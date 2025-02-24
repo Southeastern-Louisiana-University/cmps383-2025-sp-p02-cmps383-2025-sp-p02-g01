@@ -35,7 +35,7 @@ public class UsersControllerTests
         var httpResponse = await webClient.PostAsJsonAsync("/api/users", target);
 
         //assert
-        httpResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized, "we expect POST /api/users without being logged in to be rejected with an HTTP 401");
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 
     [TestMethod]
@@ -46,7 +46,7 @@ public class UsersControllerTests
         var currentLogin = await webClient.LoginAsAdminAsync();
         if (currentLogin == null)
         {
-            Assert.Fail("You are not ready for this test - make sure the admin user can login");
+            Assert.Fail();
             return;
         }
         var target = GetNewUser();
@@ -56,7 +56,7 @@ public class UsersControllerTests
         var httpResponse = await webClient.PostAsJsonAsync("/api/users", target);
 
         //assert
-        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest, "we expect POST /api/users with an empty username to be rejected with an HTTP 400");
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [TestMethod]
@@ -67,7 +67,7 @@ public class UsersControllerTests
         var currentLogin = await webClient.LoginAsAdminAsync();
         if (currentLogin == null)
         {
-            Assert.Fail("You are not ready for this test - make sure the admin user can login");
+            Assert.Fail();
             return;
         }
         var target = GetNewUser();
@@ -77,7 +77,7 @@ public class UsersControllerTests
         var httpResponse = await webClient.PostAsJsonAsync("/api/users", target);
 
         //assert
-        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest, "we expect POST /api/users with a duplicate username to be rejected with an HTTP 400");
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [TestMethod]
@@ -88,7 +88,7 @@ public class UsersControllerTests
         var currentLogin = await webClient.LoginAsAdminAsync();
         if (currentLogin == null)
         {
-            Assert.Fail("You are not ready for this test - make sure the admin user can login");
+            Assert.Fail();
             return;
         }
         var target = GetNewUser();
@@ -98,7 +98,7 @@ public class UsersControllerTests
         var httpResponse = await webClient.PostAsJsonAsync("/api/users", target);
 
         //assert
-        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest, "we expect POST /api/users with an invalid role to be rejected with an HTTP 400");
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [TestMethod]
@@ -109,7 +109,7 @@ public class UsersControllerTests
         var currentLogin = await webClient.LoginAsAdminAsync();
         if (currentLogin == null)
         {
-            Assert.Fail("You are not ready for this test - make sure the admin user can login");
+            Assert.Fail();
             return;
         }
         var target = GetNewUser();
@@ -119,7 +119,7 @@ public class UsersControllerTests
         var httpResponse = await webClient.PostAsJsonAsync("/api/users", target);
 
         //assert
-        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest, "we expect POST /api/users with an empty role list to be rejected with an HTTP 400");
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [TestMethod]
@@ -130,7 +130,7 @@ public class UsersControllerTests
         var currentLogin = await webClient.LoginAsAdminAsync();
         if (currentLogin == null)
         {
-            Assert.Fail("You are not ready for this test - make sure the admin user can login");
+            Assert.Fail();
             return;
         }
         var target = GetNewUser();
@@ -140,7 +140,7 @@ public class UsersControllerTests
         var httpResponse = await webClient.PostAsJsonAsync("/api/users", target);
 
         //assert
-        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest, "we expect POST /api/users with no password to be rejected with an HTTP 400");
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [TestMethod]
@@ -151,7 +151,7 @@ public class UsersControllerTests
         var currentLogin = await webClient.LoginAsAdminAsync();
         if (currentLogin == null)
         {
-            Assert.Fail("You are not ready for this test - make sure the admin user can login");
+            Assert.Fail();
             return;
         }
         var target = GetNewUser();
@@ -161,7 +161,7 @@ public class UsersControllerTests
         var httpResponse = await webClient.PostAsJsonAsync("/api/users", target);
 
         //assert
-        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest, "we expect POST /api/users with a bad password to be rejected with an HTTP 400");
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
     }
 
     [TestMethod]
@@ -172,7 +172,7 @@ public class UsersControllerTests
         var currentLogin = await webClient.LoginAsAdminAsync();
         if (currentLogin == null)
         {
-            Assert.Fail("You are not ready for this test - make sure the admin user can login");
+            Assert.Fail();
             return;
         }
         var target = GetNewUser();
@@ -181,14 +181,14 @@ public class UsersControllerTests
         var httpResponse = await webClient.PostAsJsonAsync("/api/users", target);
 
         //assert
-        httpResponse.StatusCode.Should().Be(HttpStatusCode.OK, "we expect POST /api/users with valid data and logged in as an admin to work");
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.OK );
         var createdUser = await httpResponse.Content.ReadAsJsonAsync<UserDto>();
-        createdUser.Should().NotBeNull("we expect POST /api/users to return a UserDto after a user was created");
+        createdUser.Should().NotBeNull();
         createdUser.Should().BeEquivalentTo(new
         {
             target.UserName,
             target.Roles
-        }, "we expect the created user to match what was sent");
+        });
 
         var loginAsThatUser = await webClient.PostAsJsonAsync("/api/authentication/login", new LoginDto
         {
@@ -207,7 +207,7 @@ public class UsersControllerTests
         var currentLogin = await webClient.LoginAsAdminAsync();
         if (currentLogin == null)
         {
-            Assert.Fail("You are not ready for this test - make sure the admin user can login");
+            Assert.Fail();
             return;
         }
         var target = GetNewAdmin();
@@ -216,14 +216,14 @@ public class UsersControllerTests
         var httpResponse = await webClient.PostAsJsonAsync("/api/users", target);
 
         //assert
-        httpResponse.StatusCode.Should().Be(HttpStatusCode.OK, "we expect POST /api/users with valid data and logged in as an admin to work");
+        httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
         var createdUser = await httpResponse.Content.ReadAsJsonAsync<UserDto>();
-        createdUser.Should().NotBeNull("we expect POST /api/users to return a UserDto after an admin was created");
+        createdUser.Should().NotBeNull();
         createdUser.Should().BeEquivalentTo(new
         {
             target.UserName,
             target.Roles
-        }, "we expect the created admin to match what was sent");
+        } );
 
         var loginAsThatUser = await webClient.PostAsJsonAsync("/api/authentication/login", new LoginDto
         {
@@ -231,7 +231,7 @@ public class UsersControllerTests
             Password = target.Password
         });
         var loginResult = await loginAsThatUser.AssertLoginFunctions();
-        loginResult.Should().BeEquivalentTo(createdUser, "we expect our created user to match our login");
+        loginResult.Should().BeEquivalentTo(createdUser);
     }
 
     private static CreateUserDto GetNewUser()
