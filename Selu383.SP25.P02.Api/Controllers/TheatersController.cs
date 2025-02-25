@@ -10,6 +10,7 @@ namespace Selu383.SP25.P02.Api.Controllers
 {
     [Route("api/theaters")]
     [ApiController]
+    [AllowAnonymous]
     public class TheatersController : ControllerBase
     {
         private readonly DbSet<Theater> theaters;

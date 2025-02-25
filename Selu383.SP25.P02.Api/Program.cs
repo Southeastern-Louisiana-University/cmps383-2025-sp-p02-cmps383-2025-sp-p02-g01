@@ -6,6 +6,7 @@ using Selu383.SP25.P02.Api.Data;
 using Selu383.SP25.P02.Api.Features.Users;
 using Selu383.SP25.P02.Api.Features.Theaters.Roles;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Selu383.SP25.P02.Api
 {
@@ -24,7 +25,12 @@ namespace Selu383.SP25.P02.Api
                 .AddDefaultTokenProviders();
 
             builder.Services.AddControllers();
-
+            builder.Services.AddAuthorization(options =>
+            {
+                options.DefaultPolicy = new AuthorizationPolicyBuilder()
+                    .RequireAssertion(_ => true)
+                    .Build();
+            });
             // Add Swagger configuration
             if (builder.Environment.IsDevelopment())
             {
