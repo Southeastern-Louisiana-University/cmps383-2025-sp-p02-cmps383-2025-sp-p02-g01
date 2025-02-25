@@ -24,6 +24,7 @@ namespace Selu383.SP25.P02.Api.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IQueryable<TheaterDto> GetAllTheaters()
         {
             return GetTheaterDtos(theaters);
@@ -31,6 +32,7 @@ namespace Selu383.SP25.P02.Api.Controllers
 
         [HttpGet]
         [Route("{id}")]
+        [AllowAnonymous]
         public ActionResult<TheaterDto> GetTheaterById(int id)
         {
             var result = GetTheaterDtos(theaters.Where(x => x.Id == id)).FirstOrDefault();
