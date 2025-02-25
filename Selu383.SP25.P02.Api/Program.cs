@@ -30,6 +30,12 @@ namespace Selu383.SP25.P02.Api
                 options.DefaultPolicy = new AuthorizationPolicyBuilder()
                     .RequireAssertion(_ => true)
                     .Build();
+
+                options.AddPolicy("RequireAuthenticated", policy =>
+                    policy.RequireAuthenticatedUser());
+
+                options.AddPolicy("RequireAdmin", policy =>
+                    policy.RequireRole("Admin"));
             });
             // Add Swagger configuration
             if (builder.Environment.IsDevelopment())
